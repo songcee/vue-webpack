@@ -4,6 +4,7 @@ const config = require('../config')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const packageConfig = require('../package.json')
+const glob = require('glob')
 
 exports.assetsHtmls = function(){
   let htmls = []
@@ -111,4 +112,27 @@ exports.createNotifierCallback = () => {
       icon: path.join(__dirname, 'logo.png')
     })
   }
+}
+
+//获取多级的入口文件
+exports.getMultiEntry = function (globPath) {
+  var entries = {},
+    basename, tmp, pathname
+
+  glob.sync(globPath).forEach(function (entry) {
+    basename = path.basename(entry, path.extname(entry))
+    tmp = entry.split('/').splice(-4)
+
+    var pathsrc = tmp[0] + '/' + tmp[1]
+    if ( tmp[0] == 'src' ) {
+      pathsrc = tmp[1]
+    }
+    // console.log(pathsrc)
+    pathname = basename // 正确输出js和html的路径
+    entries[pathname] = entry
+
+    // console.log(pathname+'-----------'+entry)
+
+  })
+  return entries
 }

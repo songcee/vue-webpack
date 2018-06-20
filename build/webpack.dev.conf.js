@@ -5,12 +5,18 @@ const config = require('../config')
 const merge = require('webpack-merge')
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
+
+// @sc add hot-reload related code to entry chunks
+// Object.keys(baseWebpackConfig.entry).forEach(function (name) {
+//   baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
+// })
 
 let plugins = [
   new webpack.DefinePlugin({
@@ -28,7 +34,7 @@ let plugins = [
   ])
 ].concat(utils.assetsHtmls())
 
-const devWebpackConfig = merge(baseWebpackConfig, {
+let devWebpackConfig = merge(baseWebpackConfig, {
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
@@ -58,6 +64,20 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   },
   plugins: plugins
 })
+
+// @sc 配置html引用
+var pages =  utils.getMultiEntry('./src/views/*.html');
+for (var pathname in pages) {
+  // 配置生成的html文件，定义路径等
+  var conf = {
+    filename: pathname + '.html',
+    template: pages[pathname], // 模板路径
+    chunks: [pathname, 'vendors', 'manifest'], // 每个html引用的js模块
+    inject: true              // js插入位置
+  }
+  // 需要生成几个html文件，就配置几个HtmlWebpackPlugin对象
+  devWebpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
+}
 
 module.exports = new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port
