@@ -128,4 +128,19 @@ const webpackConfig = merge(baseWebpackConfig, {
 //   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 // }
 
+// @sc 配置html引用
+var pages =  utils.getMultiEntry('./src/views/*.html')
+for (var pathname in pages) {
+
+  var conf = {
+    filename: pathname + '.html',
+    template: pages[pathname], // 模板路径
+    chunks: ['vendor',pathname], // 每个html引用的js模块
+    inject: true,              // js插入位置
+    hash:true
+  }
+
+  webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
+}
+
 module.exports = webpackConfig

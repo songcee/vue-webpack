@@ -1,8 +1,8 @@
 <template>
   <div class="hello">
-    <router-link to="/page1.html">page1</router-link>
+    <router-link to="/homepage.html">homepage</router-link>
     <br/>
-    <router-link to="/page2.html">page2</router-link>
+    <router-link to="/page1.html">page1</router-link>
   </div>
 </template>
 

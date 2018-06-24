@@ -10,6 +10,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 // const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin') //@llh remove
 // const UglifyJsPlugin = require('uglifyjs-webpack-plugin') //@llh remove
 
+const entries =  utils.getMultiEntry('./src/views/*.js') // @sc 获得入口js文件
+
 const env = require('../config/prod.env')
 
 let plugin = [
@@ -123,5 +125,20 @@ const webpackConfig = merge(baseWebpackConfig, {
 //   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 //   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 // }
+
+// @sc 配置html引用
+var pages =  utils.getMultiEntry('./src/views/*.html')
+for (var pathname in pages) {
+
+  var conf = {
+    filename: pathname + '.html',
+    template: pages[pathname], // 模板路径
+    chunks: ['vendor',pathname], // 每个html引用的js模块
+    inject: true,              // js插入位置
+    hash:true
+  }
+
+  webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
+}
 
 module.exports = webpackConfig
