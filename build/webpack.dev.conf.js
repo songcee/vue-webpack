@@ -32,9 +32,10 @@ let plugins = [
       ignore: ['.*']
     }
   ])
-].concat(utils.assetsHtmls())
+]
 
 let devWebpackConfig = merge(baseWebpackConfig, {
+  mode: 'development',  //@ljh add-webpack4
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
   },
@@ -74,10 +75,11 @@ for (var pathname in pages) {
     template: pages[pathname], // 模板路径
     chunks: [pathname, 'vendors', 'manifest'], // 每个html引用的js模块
     inject: true              // js插入位置
-  }
+  } 
   // 需要生成几个html文件，就配置几个HtmlWebpackPlugin对象
   devWebpackConfig.plugins.push(new HtmlWebpackPlugin(conf))
 }
+
 
 module.exports = new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port
@@ -99,7 +101,6 @@ module.exports = new Promise((resolve, reject) => {
         ? utils.createNotifierCallback()
         : undefined
       }))
-
       resolve(devWebpackConfig)
     }
   })

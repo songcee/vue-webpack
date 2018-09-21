@@ -1,8 +1,8 @@
 <template>
   <div class="hello">
-    <router-link to="/homepage.html">homepage</router-link>
+    <a href="/index.html">index</a>
     <br/>
-    <router-link to="/page2.html">page2</router-link>
+    <a href="/page2.html">page2</a>
   </div>
 </template>
 

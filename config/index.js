@@ -10,6 +10,9 @@ module.exports = {
     entry: {
       app: './src/main.js'
     }
+    // stats: {  //@ljh add-webpack4
+    //   children: false
+    // }
   },
   dev: {
 
@@ -42,7 +45,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../html'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     // source map
     productionSourceMap: true,
@@ -57,6 +60,16 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     productionSourceMap: false,
-    devtool: false
+    devtool: false,
+
+    // 自动上传资源服务器的相关配置---start
+    thsi_open:true,  //是否开启（总开关）:true=开启自动上传;false=关闭自动上传
+    thsi_user:'liluhui', //需要输入正确的用户和密码
+    thsi_pwd:'hexin',
+    //local_file，line_file是分别配置本地和线上的地址，需要一一对应
+    thsi_local_file:["/html/s/js/dzl/tougu/test/test","/html/s/js/dzl/tougu/test/test23"],
+    thsi_line_file:["./html/static/css","./html/static/js"],
+    thsi_openWindow:true,//是否上传后在浏览器中打开资源文件:true=开启;false=关闭
+    thsi_ifReplace:true //是否需要替换html中的资源路径:true=开启;false=关闭
   }
 }

@@ -5,14 +5,23 @@ const webpack = require('webpack')
 const config = require('../config')
 const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const uploadFileThsi = require('webpack-node-thsi')
 
 const env = require('../config/prod.env')
 
-let plugins: [
+var releaseHtml =  utils.getMultiEntry('./src/views/*.html');
+var releaseHtmlArr = []
+for(let kk in releaseHtml){
+  let htmlBuild = releaseHtml[kk].slice(releaseHtml[kk].lastIndexOf('/'))
+  releaseHtmlArr.push('./html'+htmlBuild)
+}
+
+let plugins = [
   // http://vuejs.github.io/vue-loader/en/workflow/production.html
   new webpack.DefinePlugin({
     'process.env': env
@@ -73,7 +82,7 @@ let plugins: [
     name: 'app',
     async: 'vendor-async',
     children: true,
-    minChunks: 3
+    minChunks: 3 
   }),
 
   // copy custom static assets
@@ -84,7 +93,21 @@ let plugins: [
       ignore: ['.*']
     }
   ])
-].concat(utils.assetsHtmls())
+]
+// .concat(utils.assetsHtmls())
+// if-true 则开启自动上传
+if(config.release.thsi_open){
+  plugins = plugins.concat(
+    new uploadFileThsi({ //node-thsi 上传
+      "user":config.release.thsi_user,
+      "pwd":config.release.thsi_pwd,
+      "line":config.release.thsi_local_file,
+      "local":config.release.thsi_line_file,
+      "openWindow":config.release.thsi_openWindow,
+      "ifReplace":config.release.thsi_ifReplace,
+      "replaceHtml":releaseHtmlArr
+  }))
+}
 
 const webpackConfig = merge(baseWebpackConfig, {
   module: {
@@ -135,7 +158,7 @@ for (var pathname in pages) {
   var conf = {
     filename: pathname + '.html',
     template: pages[pathname], // 模板路径
-    chunks: ['vendor',pathname], // 每个html引用的js模块
+    chunks: ['vendor',pathname, 'manifest'], // 每个html引用的js模块
     inject: true,              // js插入位置
     hash:true
   }
