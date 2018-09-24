@@ -111,7 +111,6 @@ let plugin = [
 ]
 // .concat(utils.assetsHtmls())
 
-
 const webpackConfig = merge(baseWebpackConfig, {
   mode:'production',  //@ljh add-webpack4
   module: {
@@ -124,8 +123,8 @@ const webpackConfig = merge(baseWebpackConfig, {
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {
     path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+    filename: utils.assetsPath('js/[name].js'),
+    chunkFilename: utils.assetsPath('js/[name].js')
   },
   plugins: plugin,
   //@ljh add-webpack4
@@ -173,14 +172,15 @@ const webpackConfig = merge(baseWebpackConfig, {
 
 // @sc 配置html引用
 var pages =  utils.getMultiEntry('./src/views/*.html')
+
 for (var pathname in pages) {
 
   var conf = {
     filename: pathname + '.html',
     template: pages[pathname], // 模板路径
-    chunks: ['vendor',pathname, 'manifest'], // 每个html引用的js模块
+    chunks: ['vendor',pathname], // 每个html引用的js模块
     inject: true,              // js插入位置
-    hash:true
+    hash: false
   }
 
   webpackConfig.plugins.push(new HtmlWebpackPlugin(conf))

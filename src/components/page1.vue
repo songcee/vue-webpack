@@ -1,8 +1,8 @@
 <template>
   <div class="hello">
-    <a href="/index.html">index</a>
+    <a href="./index.html">index</a>
     <br/>
-    <a href="/page2.html">page2</a>
+    <a href="./page2.html">page2</a>
   </div>
 </template>
 

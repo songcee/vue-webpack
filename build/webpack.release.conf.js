@@ -121,7 +121,7 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.release.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+    chunkFilename: utils.assetsPath('js/[name].[chunkhash].js')
   },
   plugins: plugins
 })
@@ -158,7 +158,7 @@ for (var pathname in pages) {
   var conf = {
     filename: pathname + '.html',
     template: pages[pathname], // 模板路径
-    chunks: ['vendor',pathname, 'manifest'], // 每个html引用的js模块
+    chunks: ['vendor',pathname], // 每个html引用的js模块
     inject: true,              // js插入位置
     hash:true
   }
